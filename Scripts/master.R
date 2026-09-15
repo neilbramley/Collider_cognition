@@ -15,8 +15,11 @@ set.seed(12)
 
 # ------------- 0. Source utils -------------
 source(here('Scripts', 'cesmUtils.R')) # Functions for running the cesm model - used in 03
-source(here('Scripts', 'optimUtils4par.R')) # Functions for modelling likelihood calculation - used in 06
+
 source(here('Scripts', 'modelNames.R')) # Static lists with model characteristics - used in 05
+
+source(here('Scripts', 'optimUtils4par.R')) # Functions for modelling likelihood calculation - used in 06
+
 source(here('Scripts', 'plotUtils.R')) # Functions for plotting to compare model and ppts used in 10, 11
 
 
