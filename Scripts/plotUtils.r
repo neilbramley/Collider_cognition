@@ -3,24 +3,24 @@
 #################################################################################
 
 # -------------- Static variables -----------------
-models <- c(
-  'full',
-  'noAct',
-  'noInf',
-  'noSelect',
-  'noActnoInf',
-  'noActnoSelect',
-  'noInfnoSelect',
-  'noActnoInfnoSelect',
-  'noKind',
-  'noActnoKind',
-  'noInfnoKind',
-  'noKindnoSelect',
-  'noActnoInfnoKind',
-  'noActnoKindnoSelect',
-  'noInfnoKindnoSelect',
-  'noActnoInfnoKindnoSelect'
-)
+# models <- c(
+#   'full',
+#   'noAct',
+#   'noInf',
+#   'noSelect',
+#   'noActnoInf',
+#   'noActnoSelect',
+#   'noInfnoSelect',
+#   'noActnoInfnoSelect',
+#   'noKind',
+#   'noActnoKind',
+#   'noInfnoKind',
+#   'noKindnoSelect',
+#   'noActnoInfnoKind',
+#   'noActnoKindnoSelect',
+#   'noInfnoKindnoSelect',
+#   'noActnoInfnoKindnoSelect'
+# )
 
 row_labeller <- c(
   "A=.1,Au=.5,B=.8,Bu=.5" = ".1,.5,.8,.5",
@@ -53,12 +53,12 @@ plot_model_pgroup <- function(model_colname, pgroup_label, df) {
     scale_fill_brewer(palette = "Set2") + # , labels = c("Observed \n(A|B)", "Unobserved \n(Au|Bu)")
     scale_colour_manual(values = c('gray', 'black')) +
     guides(fill = guide_legend(override.aes = list(shape = NA))) +
-    geom_point(aes(y = .data[[model_colname]]), colour = 'black') +
+    geom_point(aes(y = .data[[model_colname]]), colour = 'red') +
     geom_rect(
       data = subset(
         df_filtered,
         trial_structure_type %in%
-          c("Conjunctive: A=1,B=1,E=1", "Disjunctive: A=1,B=1,E=1")
+          c("Disjunctive: A=1,B=0,E=1", "Disjunctive: A=0,B=1,E=1")
       ),
       fill = NA,
       colour = "blue",
@@ -162,7 +162,7 @@ plot_nomodel_pgroup2 <- function(pgroup_label, df, ent) {
       inherit.aes = FALSE,
       hjust = 1.1,
       vjust = 1.4,
-      size = 3.5, # size is in mm, so 3.5 renders at roughly 10 pt
+      #size = 3.5, # size is in mm, so 3.5 renders at roughly 10 pt
       colour = "black"
     ) +
 

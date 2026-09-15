@@ -41,6 +41,34 @@ cor.test(df$full, df$prop)
 # Usage
 # Instead, call a single model and pgroup plot like this for example full model for pgroup3:
 
+# -------- behavioral discuss plot for review --------
+
+plot2 <- plot_model_pgroup('noActnoKindnoSelect', 'A=.5,Au=.1,B=.5,Bu=.8', df)
+print(plot2)
+
+ggsave(
+  filename = "lesion2.pdf", # FIG 3 IN PAPER
+  plot = plot2,
+  path = here("Other", "Plots"),
+  width = 12,
+  height = 6,
+  units = "in"
+)
+
+
+plot1 <- plot_model_pgroup('noActnoInfnoKind', 'A=.1,Au=.5,B=.8,Bu=.5', df)
+print(plot1)
+
+ggsave(
+  filename = "lesion1.pdf", # FIG 3 IN PAPER
+  plot = plot1,
+  path = here("Other", "Plots"),
+  width = 12,
+  height = 6,
+  units = "in"
+)
+
+
 # ------- full ------------
 
 # FIG 3 IN PAPER
@@ -96,7 +124,6 @@ ggsave(
   units = "in"
 )
 
-# Early ones with no ent
 
 plotnm2 <- plot_nomodel_pgroup2('A=.5,Au=.1,B=.5,Bu=.8', df, ent)
 print(plotnm2)
@@ -123,181 +150,15 @@ ggsave(
   units = "in"
 )
 
-
-# ----------- noAct ------------
-# plotna3 <- plot_model_pgroup('noAct', 'A=.1,Au=.7,B=.8,Bu=.5', df)
-# print(plotna3)
-#
-# ggsave(
-#   filename = "noAct3.pdf",
-#   plot = plotna3,
-#   path = here("Other", "Plots"),
-#   width = 12,
-#   height = 6,
-#   units = "in"
-# )
-#
-# # Best fitting model for other pgroups:
-#
-# plotna2 <- plot_model_pgroup('noAct', 'A=.5,Au=.1,B=.5,Bu=.8', df)
-# print(plotna2)
-#
-# ggsave(
-#   filename = "noAct2.pdf",
-#   plot = plotna2,
-#   path = here("Other", "Plots"),
-#   width = 12,
-#   height = 6,
-#   units = "in"
-# )
-#
-# plotna1 <- plot_model_pgroup('noAct', 'A=.1,Au=.5,B=.8,Bu=.5', df)
-# print(plotna1)
-#
-# ggsave(
-#   filename = "noAct1.pdf",
-#   plot = plotna1,
-#   path = here("Other", "Plots"),
-#   width = 12,
-#   height = 6,
-#   units = "in"
-# )
-
-pcompfna3 <- plot_two_models_pgroup(
-  'full',
-  'noAct',
-  'A=.1,Au=.7,B=.8,Bu=.5',
-  df
-) #3
+# ----------- no ent --------
+justppt3 <- plot_nomodel_pgroup('A=.1,Au=.7,B=.8,Bu=.5', df)
+#print(plotnm1)
 
 ggsave(
-  filename = "compfullna3.pdf",
-  plot = pcompfna3,
+  filename = "justppt3.pdf", # FIG 3 IN PAPER
+  plot = justppt3,
   path = here("Other", "Plots"),
   width = 12,
   height = 6,
   units = "in"
 )
-
-# ------------- Compare full and noSelect - k=ig ---------------
-
-# pcompfns3 <- plot_two_models_pgroup(
-#   'full',
-#   'noSelect',
-#   'A=.1,Au=.7,B=.8,Bu=.5',
-#   df
-# ) #3
-#
-# ggsave(
-#   filename = "compfullns3.pdf",
-#   plot = pcompfns3,
-#   path = here("Other", "Plots"),
-#   width = 12,
-#   height = 6,
-#   units = "in"
-# )
-#
-# # ------- 2 -------
-#
-# pcompfns2 <- plot_two_models_pgroup(
-#   'full',
-#   'noSelect',
-#   'A=.5,Au=.1,B=.5,Bu=.8',
-#   df
-# ) #3
-#
-# ggsave(
-#   filename = "compfullns2.pdf",
-#   plot = pcompfns2,
-#   path = here("Other", "Plots"),
-#   width = 12,
-#   height = 6,
-#   units = "in"
-# )
-#
-# # ------- 1 -------
-#
-# pcompfns1 <- plot_two_models_pgroup(
-#   'full',
-#   'noSelect',
-#   'A=.1,Au=.5,B=.8,Bu=.5',
-#   df
-# ) #3
-#
-# ggsave(
-#   filename = "compfullns1.pdf",
-#   plot = pcompfns1,
-#   path = here("Other", "Plots"),
-#   width = 12,
-#   height = 6,
-#   units = "in"
-# )
-
-# ----------- Same but no Kind - compare noKind and noKindnoSelect --------------
-
-# pcompnkns3 <- plot_two_models_pgroup(
-#   'noKind',
-#   'noKindnoSelect',
-#   'A=.1,Au=.7,B=.8,Bu=.5',
-#   df
-# ) #3
-#
-# ggsave(
-#   filename = "compnkns3.pdf",
-#   plot = pcompnkns3,
-#   path = here("Other", "Plots"),
-#   width = 12,
-#   height = 6,
-#   units = "in"
-# )
-
-# ----------- Compare full and noAct to see why it is better (k=KNOWN) --------------
-
-# pcomp1 <- plot_two_models_pgroup('full', 'noAct', 'A=.1,Au=.5,B=.8,Bu=.5', df) #1
-#
-# ggsave(
-#   filename = "compfullna1.pdf",
-#   plot = pcomp1,
-#   path = here("Other", "Plots"),
-#   width = 12,
-#   height = 6,
-#   units = "in"
-# )
-
-# pcomp2 <- plot_two_models_pgroup('full', 'noAct', 'A=.5,Au=.1,B=.5,Bu=.8', df) #2
-#
-# ggsave(
-#   filename = "compfullna2.pdf",
-#   plot = pcomp2,
-#   path = here("Other", "Plots"),
-#   width = 12,
-#   height = 6,
-#   units = "in"
-# )
-#
-# pcomp3 <- plot_two_models_pgroup('full', 'noAct', 'A=.1,Au=.7,B=.8,Bu=.5', df) #3
-#
-# ggsave(
-#   filename = "compfullna3.pdf",
-#   plot = pcomp3,
-#   path = here("Other", "Plots"),
-#   width = 12,
-#   height = 6,
-#   units = "in"
-# )
-#
-# pcompnank <- plot_two_models_pgroup(
-#   'noAct',
-#   'noActnoKind',
-#   'A=.1,Au=.7,B=.8,Bu=.5',
-#   df
-# )
-# print(pcompnank)
-# ggsave(
-#   filename = "compnank3.pdf",
-#   plot = pcompnank,
-#   path = here("Other", "Plots"),
-#   width = 12,
-#   height = 6,
-#   units = "in"
-# )
