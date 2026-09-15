@@ -47,4 +47,4 @@ fitforplot <- merge(df_wide, df, by = c('trial_id', 'node3')) # 288 of 37
 
 ## ---------------------------------------------------------------------------------------------------------------
 
-save(fitforplot, file = here('Data', 'modelData', 'custom_models_nb.rda')) #
+save(fitforplot, file = here('Data', 'modelData', 'custom_models.rda')) #

@@ -3,24 +3,24 @@
 #################################################################################
 
 # -------------- Static variables -----------------
-# models <- c(
-#   'full',
-#   'noAct',
-#   'noInf',
-#   'noSelect',
-#   'noActnoInf',
-#   'noActnoSelect',
-#   'noInfnoSelect',
-#   'noActnoInfnoSelect',
-#   'noKind',
-#   'noActnoKind',
-#   'noInfnoKind',
-#   'noKindnoSelect',
-#   'noActnoInfnoKind',
-#   'noActnoKindnoSelect',
-#   'noInfnoKindnoSelect',
-#   'noActnoInfnoKindnoSelect'
-# )
+models <- c(
+  'full',
+  'noAct',
+  'noInf',
+  'noSelect',
+  'noActnoInf',
+  'noActnoSelect',
+  'noInfnoSelect',
+  'noActnoInfnoSelect',
+  'noKind',
+  'noActnoKind',
+  'noInfnoKind',
+  'noKindnoSelect',
+  'noActnoInfnoKind',
+  'noActnoKindnoSelect',
+  'noInfnoKindnoSelect',
+  'noActnoInfnoKindnoSelect'
+)
 
 row_labeller <- c(
   "A=.1,Au=.5,B=.8,Bu=.5" = ".1,.5,.8,.5",
@@ -53,12 +53,12 @@ plot_model_pgroup <- function(model_colname, pgroup_label, df) {
     scale_fill_brewer(palette = "Set2") + # , labels = c("Observed \n(A|B)", "Unobserved \n(Au|Bu)")
     scale_colour_manual(values = c('gray', 'black')) +
     guides(fill = guide_legend(override.aes = list(shape = NA))) +
-    geom_point(aes(y = .data[[model_colname]]), colour = 'red') +
+    geom_point(aes(y = .data[[model_colname]]), colour = 'black') +
     geom_rect(
       data = subset(
         df_filtered,
         trial_structure_type %in%
-          c("Disjunctive: A=1,B=0,E=1", "Disjunctive: A=0,B=1,E=1")
+          c("Conjunctive: A=1,B=1,E=1", "Disjunctive: A=1,B=1,E=1")
       ),
       fill = NA,
       colour = "blue",
@@ -162,7 +162,7 @@ plot_nomodel_pgroup2 <- function(pgroup_label, df, ent) {
       inherit.aes = FALSE,
       hjust = 1.1,
       vjust = 1.4,
-      #size = 3.5, # size is in mm, so 3.5 renders at roughly 10 pt
+      size = 3.5, # size is in mm, so 3.5 renders at roughly 10 pt
       colour = "black"
     ) +
 
@@ -205,37 +205,37 @@ plot_nomodel_pgroup2 <- function(pgroup_label, df, ent) {
 
 
 # A different function to compare two models on one plot
-plot_two_models_pgroup <- function(model1, model2, pgroup_label, df) {
+
+plot_two_models_pgroup_nb <- function(model1, model2, pgroup_label, df, plot_title, highlight_list) {
   df_filtered <- df |> filter(pgroup == pgroup_label)
   ggplot(
     df_filtered,
     aes(x = node3, y = prop, fill = Observed, colour = Actual)
   ) +
-    geom_bar(stat = 'identity') +
-    geom_errorbar(aes(ymin = prop - SE, ymax = prop + SE), width = .2) +
+    geom_bar(stat = 'identity', alpha = .2) +
+    geom_errorbar(aes(ymin = prop - SE, ymax = prop + SE), alpha = .2, width = .2) +
     # Model 1: black circles
     geom_point(
       aes(y = .data[[model1]]),
-      colour = 'black',
-      shape = 16,
-      size = 2,
-      alpha = 0.9,
-      show.legend = TRUE
+      colour = 'darkgreen',
+      shape = '+',
+      size = 5,
+      alpha = 1,
+      show.legend = F
     ) +
     # Model 2: red triangles
     geom_point(
       aes(y = .data[[model2]]),
-      colour = 'red',
-      shape = 17,
-      size = 2,
-      alpha = 0.9,
-      show.legend = TRUE
+      colour = 'darkred',
+      shape = '-',
+      size = 5,
+      alpha = 1,
+      show.legend = F
     ) +
     geom_rect(
       data = subset(
         df_filtered,
-        trial_structure_type %in%
-          c("Conjunctive: A=1,B=1,E=1", "Disjunctive: A=1,B=1,E=1")
+        trial_structure_type %in% highlight_list
       ),
       fill = NA,
       colour = "blue",
@@ -257,8 +257,9 @@ plot_two_models_pgroup <- function(model1, model2, pgroup_label, df) {
       # )
     ) +
     scale_fill_brewer(palette = "Set2") + #, labels = c("Observed \n(A|B)", "Unobserved \n(Au|Bu)")) +
-    scale_colour_manual(values = c('gray', 'black')) +
+    scale_colour_manual(values = c('lightgray', 'darkgray')) +
     theme_bw() +
+    ggtitle(plot_title) +
     theme(
       panel.grid = element_blank(),
       axis.text = element_text(size = 14),

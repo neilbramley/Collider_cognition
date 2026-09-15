@@ -39,10 +39,15 @@ source(here('Scripts', '04processPreds.R')) # Also sets a column of 1s and tags 
 # -------------3. Results: fit model, compare predictions, plot etc -----------------
 
 source(here('Scripts', '05optimise.R')) # Uses `optimUtils4par.R` to fit models.
+
+# source(here('Scripts', '05b_custom_model_setting.R')) #For making custom model settings for plots
+
 source(here('Scripts', '06processForPlot.R')) # Make model predictions use friendly for plotting
 
 source(here('Scripts', '07reportFigs.R')) # Main plots on every trial at once. Uses `plotUtils` functions to compare models
 source(here('Scripts', '08reportFigs2.R')) # Other plots not using functions; aggregate and split plots
+
+# source(here('Scripts', '08b_custom_plots.R')) # Make custom plots
 
 source(here('Scripts', '09fitByppt.R')) # Best model fit by participant. Input: data.rda
 source(here('Scripts', '10presentByppt.R')) # chisq tests and component bar plot

@@ -12,10 +12,10 @@ library(RColorBrewer)
 library(ggplot2)
 
 
-source(here('Scripts', 'plotUtils_neiladditions.R')) # Functions for plotting to compare model and ppts, using ggplot
+source(here('Scripts', 'plotUtils.R')) # Functions for plotting to compare model and ppts, using ggplot
 load(here('Data', 'modelData', 'fitforplot4par.rda'), verbose = T) # 288 of 31. Generated in script 07.
 df_fitted<-df
-load(here('Data', 'modelData', 'custom_models_nb.rda'), verbose = T) # 288 of 31. Generated in script 07.
+load(here('Data', 'modelData', 'custom_models.rda'), verbose = T) # 288 of 31. Generated in script 07.
 df <- fitforplot
 
 
