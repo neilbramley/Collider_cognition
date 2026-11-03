@@ -170,7 +170,7 @@ dataNorm$trial_id <- as.factor(dataNorm$trial_id)
 #   mutate(baseline = 1 / n())
 
 # Actually let's call it df
-df <- merge(dataNorm, ig, by = c('pgroup', 'trialtype', 'node3')) # adds in ig, 288 obs
+df <- merge(dataNorm, ig, by = c('pgroup', 'trialtype', 'node3')) # adds in ig, 288 obs TODO: SEPARATE AND ADD KL, IG, MI
 
 #-------- Create variables coding the actual observation -------------
 # We had this before in data, but it wasn't right because of the incomplete counterbalancing issue

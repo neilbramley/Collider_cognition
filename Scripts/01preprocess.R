@@ -51,6 +51,7 @@ df1 <- df1 |>
 df1 <- df1 |>
   filter(cb != 'NA') # 2592
 
+df1$trial_order<-rep(1:12)
 
 ## --------------------------------------------------------------------------------------------------------------------------------
 # Get the list of who got paid according to prolific
@@ -314,6 +315,10 @@ df2 <- df2 |>
   )
 
 # NOTE: use trialtype but don't use A,B,E, because of the counterbalancing issue they no longer match
+
+# Add trial order
+
+
 
 # Now arrange df2 so all subjects are in order, and within each subject all trials are in order
 df2 <- df2 |>

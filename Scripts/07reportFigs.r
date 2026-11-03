@@ -43,6 +43,8 @@ cor.test(df$full, df$prop)
 
 # -------- behavioral discuss plot for review --------
 
+
+
 plot2 <- plot_model_pgroup('noActnoKindnoSelect', 'A=.5,Au=.1,B=.5,Bu=.8', df)
 print(plot2)
 
