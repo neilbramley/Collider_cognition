@@ -28,7 +28,7 @@ models <- list(
 
 model_names <- names(models)
 
-prepare_trials <- function(pars, mp, df, model) {
+prepare_trials <- function(pars, mp, df, model, kind_type) {
   # transform parameters
   params <- model$transform(pars)
 
@@ -55,7 +55,7 @@ prepare_trials <- function(pars, mp, df, model) {
 
   # add kappa * ig BEFORE Actual
   if (!is.null(params$kappa)) {
-    newdf$pred <- newdf$pred + params$kappa * newdf$ig
+    newdf$pred <- newdf$pred + params$kappa * newdf[[kind_type]]
   }
 
   # apply Actual (if specified as a column name in df)
@@ -94,8 +94,8 @@ compute_mpred <- function(tr, params) {
 # LIKELIHOOD FUNCTION
 # =======================================
 
-get_likelihood <- function(pars, mp, df, model) {
-  prep <- prepare_trials(pars, mp, df, model)
+get_likelihood <- function(pars, mp, df, model, kind_type) {
+  prep <- prepare_trials(pars, mp, df, model, kind_type)
   trials <- prep$trials
   params <- prep$params
 
@@ -120,8 +120,8 @@ get_likelihood <- function(pars, mp, df, model) {
 # PREDICTION FUNCTION - follows same format as likelihood
 # =======================================
 
-get_prediction <- function(pars, mp, df, model) {
-  prep <- prepare_trials(pars, mp, df, model)
+get_prediction <- function(pars, mp, df, model, kind_type) {
+  prep <- prepare_trials(pars, mp, df, model, kind_type)
   trials <- prep$trials
   params <- prep$params
 
@@ -161,6 +161,7 @@ get_optimisation <- function(
   model_names,
   mp,
   df,
+  kind_type,
   initial_values = NULL
 ) {
   # A. Optimize each model
@@ -176,7 +177,7 @@ get_optimisation <- function(
     tryCatch(
       optim(
         par = init,
-        fn = function(par) get_likelihood(par, mp = mp, df = df, model = model),
+        fn = function(par) get_likelihood(par, mp = mp, df = df, model = model, kind_type = kind_type),
         method = "Nelder-Mead",
         control = list(maxit = 1000)
       ),
@@ -232,7 +233,7 @@ get_optimisation <- function(
 
   # For BIC, use per‑model n_par
   N <- sum(df$n)
-  model_fits$BIC <- -2 * model_fits$logl + n_par_vec * log(N)
+  model_fits$BIC <- -2 * model_fits$logl + sapply(models, '[[', 'n_BIC') * log(N)
 
   # Format for printing; keep numeric version in attributes if needed
   model_fits_fmt <- model_fits |>
@@ -261,7 +262,8 @@ get_optimisation <- function(
           pars = pars,
           mp = mp,
           df = df,
-          model = model
+          model = model,
+          kind_type
         )
       }
     })

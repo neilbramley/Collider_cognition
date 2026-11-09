@@ -247,6 +247,6 @@ ggsave(
   plot = p,
   path = here("Other", "Plots"),
   width = 12,
-  #height = 8,
+  height = 4,
   units = "in"
 )

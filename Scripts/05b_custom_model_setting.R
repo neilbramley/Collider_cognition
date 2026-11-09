@@ -13,6 +13,11 @@ set.seed(12)
 
 load(here('Data', 'modelData', 'goOptim.rda')) # loads mp and df
 
+# reviewer suggestion to not pay kindness bonuses to ruled out states.
+df$mi[df$post==0]<-0
+df$kl[df$post==0]<-0
+df$ig[df$post==0]<-0
+df$ig_old[df$post==0]<-0
 
 # Parameters:
 
@@ -20,7 +25,8 @@ predictions<-get_prediction(
   pars = c(log(1/10),-Inf,log(1),log(1)),
   mp = mp,
   df = df,
-  model = models[[1]]
+  model = models[[1]],
+  kind_type='kl'
 )
 
 for (i in 2:length(models))
@@ -30,7 +36,7 @@ for (i in 2:length(models))
                        pars = c(log(1/10),-Inf,log(1),log(1)),
                        mp = mp,
                        df = df,
-                       model = models[[i]]))
+                       model = models[[i]], kind_type='kl'))
 }
 
 # ------------- Combine and process --------------------

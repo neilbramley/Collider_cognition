@@ -125,11 +125,11 @@ getpost <- mp |>
   summarise(post = sum(posterior), prior = sum(PrUn))
 
 
-# If ig is KL divergence
-unobs_ig <- getpost |>
+# If kindness is KL divergence
+unobs_KL <- getpost |>
   group_by(pgroup, trialtype, node3) |>
   mutate(
-    ig = round(
+    kl = round(
       if_else(post == 0, 0, post * log2(post / prior)) +
         if_else(post == 1, 0, (1 - post) * log2((1 - post) / (1 - prior))),
       3
@@ -137,19 +137,143 @@ unobs_ig <- getpost |>
   ) |>
   ungroup()
 
-# If ig is ''computational kindness''
-# unobs_ig <- getpost |>
-#   group_by(pgroup, trialtype, node3) |>
-#   mutate(
-#     ig = -sum(if_else(c(prior, 1-prior) == 0, 0, c(prior, 1-prior) * log2(c(prior, 1-prior)))) -
-#       -sum(if_else(c(post, 1-post) == 0, 0, c(post, 1-post) * log2(c(post, 1-post))))
-#   ) |>
-#   ungroup()
+# If kindness is entropy
+unobs_IG <- getpost |>
+  group_by(pgroup, trialtype, node3) |>
+  mutate(
+    ig = -sum(if_else(c(prior, 1-prior) == 0, 0, c(prior, 1-prior) * log2(c(prior, 1-prior)))) -
+      -sum(if_else(c(post, 1-post) == 0, 0, c(post, 1-post) * log2(c(post, 1-post))))
+  ) |>
+  ungroup()
+
+unobs_IG_old <- getpost |>
+  group_by(pgroup, trialtype, node3) |>
+  summarise(
+    prior_entropy = round(-sum(prior * log2(prior + 1e-10)), 3),
+    post_entropy = round(-sum(post * log2(post + 1e-10)), 3),
+    ig_old = round(prior_entropy - post_entropy, 3)
+  ) |>
+  ungroup()
+
+# If kindness is mutual information
+unobs_MI <- getpost |>
+  group_by(pgroup, trialtype, node3) |>
+  mutate(
+    mi = 0
+  ) |>
+  ungroup()
+
+ab_obs_c<-matrix(c(0,0,
+                   0,1,
+                   1,0,
+                   1,1,
+                   1,1), ncol=2, byrow=T)
+
+ab_obs_d<-matrix(c(0,0,
+                   0,1,
+                   0,1,
+                   1,0,
+                   1,0,
+                   1,1,
+                   1,1), ncol=2, byrow=T)
+
+uss<-matrix(c(0,0,
+         0,1,
+         1,0,
+         1,1), ncol=2, byrow=T)
+for (i in 1:nrow(unobs_MI))
+{
+  if (!unobs_MI$node3[i]%in%c('A=0','A=1','B=0','B=1'))
+  {
+    if (unobs_MI$pgroup[i]=='1')
+    {
+      aubu<-c(params1[[2]][2], params1[[2]][4])
+    } else if (unobs_MI$pgroup[i]=='2')
+    {
+      aubu<-c(params2[[2]][2], params2[[2]][4])
+    } else if (unobs_MI$pgroup[i]=='3')
+    {
+      aubu<-c(params3[[2]][2], params3[[2]][4])
+    }
+    
+    u_prior<-c((1-aubu[1])*(1-aubu[2]),(1-aubu[1])*aubu[2],aubu[1]*(1-aubu[2]),aubu[1]*aubu[2])
+    
+    if (substr(unobs_MI$node3[i], 1,1)=='A')
+    {
+      viq<-'A'  
+    } else if (substr(unobs_MI$node3[i], 1,1)=='B')
+    {
+      viq<-'B'  
+    }
+    
+    if (substr(unobs_MI$trialtype[i],1,1)=='c')
+    {
+      #Conjunctive
+      ab_obs<-ab_obs_c[as.numeric(substr(unobs_MI$trialtype[i],2,2)),]
+      
+      if (ab_obs[1]==1 & ab_obs[2]==1)
+      {
+        pE<-prod(aubu)
+      } else
+      {
+        pE<-0
+      }
+      pri_ent<- -sum(c(1-pE, pE)* log2(c(1-pE, pE)), na.rm=T)
+      EgU<-rowSums(sweep(uss, 2, ab_obs ,'*'))==2
+      
+    } else if (substr(unobs_MI$trialtype[i],0,1)=='d')
+    {
+      #Disjunctive
+      ab_obs<-ab_obs_d[as.numeric(substr(unobs_MI$trialtype[i],2,2)),]
+      
+      if (ab_obs[1]==1 & ab_obs[2]==1)
+      {
+        pE<-1-(1-aubu[1])*(1-aubu[2])
+      } else if (ab_obs[1]==1 & ab_obs[2]==0) {
+        pE<-aubu[1]
+      }else if (ab_obs[1]==0 & ab_obs[2]==1) {
+        pE<-aubu[2]
+      } else if (ab_obs[1]==0 & ab_obs[2]==0)
+      {
+        pE<-0
+      }
+      pri_ent<- -sum(c(1-pE, pE)* log2(c(1-pE, pE)), na.rm=T)
+      #au=0, bu=0
+      EgU<-rowSums(sweep(uss, 2, ab_obs ,'*'))>0
+    }
+    
+    
+    
+    if (viq=='A')
+    {
+      post1<-sum(EgU[uss[,1]==0]*(u_prior[uss[,1]==0]/sum(u_prior[uss[,1]==0]))* c(1-aubu[2], aubu[2])) #if viq is F
+      post2<-sum(EgU[uss[,1]==1]*(u_prior[uss[,1]==2]/sum(u_prior[uss[,1]==2]))* c(1-aubu[2], aubu[2])) #if viq is T
+      ent1<- -sum(c(post1, 1-post1)*log2(c(post1, 1-post1)), na.rm=T)
+      ent2<- -sum(c(post2, 1-post2)*log2(c(post2, 1-post2)), na.rm=T)
+      eig<-(pri_ent-ent1)*(1-pE) + (pri_ent-ent2)*pE
+    } else if (viq=='B')
+    {
+      post1<-sum(EgU[uss[,2]==0]*(u_prior[uss[,2]==0]/sum(u_prior[uss[,2]==0]))* c(1-aubu[1], aubu[1])) #if viq is F
+      post2<-sum(EgU[uss[,2]==1]*(u_prior[uss[,2]==2]/sum(u_prior[uss[,2]==2]))* c(1-aubu[1], aubu[1])) #if viq is T
+      ent1<- -sum(c(post1, 1-post1)*log2(c(post1, 1-post1)), na.rm=T)
+      ent2<- -sum(c(post2, 1-post2)*log2(c(post2, 1-post2)), na.rm=T)
+      eig<-(pri_ent-ent1)*(1-pE) + (pri_ent-ent2)*pE
+    }
+    unobs_MI$mi[i]<-eig
+  }
+  #e.g. p3 d7, 11?, P(E|Au=1)=1 ; P(E|Au=0)=.5 ; P(E) = 1-(1-.7)(1-.5) ; (1*.7) + (0.5*.3)...
+}
 
 # This will be 288 obs, same size as data and ppts, in the eventual likelihood, remember to save it with mp
-ig <- unobs_ig |>
+ig <- unobs_IG |>
   select(pgroup, trialtype, node3, ig)
+kl <- unobs_KL |>
+  select(pgroup, trialtype, node3, kl)
+mi <- unobs_MI |>
+  select(pgroup, trialtype, node3, mi)
 
+ig_old<-unobs_IG_old |>
+  select(pgroup, trialtype, node3, ig_old)
 # ---------- Do the work on participant data here ------------
 
 # ------------- 2. Summarise participant data in the 288 trial format ---------------------
@@ -171,7 +295,11 @@ dataNorm$trial_id <- as.factor(dataNorm$trial_id)
 
 # Actually let's call it df
 df <- merge(dataNorm, ig, by = c('pgroup', 'trialtype', 'node3')) # adds in ig, 288 obs TODO: SEPARATE AND ADD KL, IG, MI
+df <- merge(df, kl, by = c('pgroup', 'trialtype', 'node3'))
+df <- merge(df, mi, by = c('pgroup', 'trialtype', 'node3'))
+df <- merge(df, ig_old, by = c('pgroup', 'trialtype', 'node3'))
 
+df<-merge(df, getpost, by = c('pgroup', 'trialtype', 'node3'))
 #-------- Create variables coding the actual observation -------------
 # We had this before in data, but it wasn't right because of the incomplete counterbalancing issue
 # We know trialtype is right, so let's recode

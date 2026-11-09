@@ -7,6 +7,7 @@
 full <- list(
   name = "full",
   n_params = 4,
+  n_BIC = 4,
   probdist = "posterior",
   base = "cesm",
   Actual = "Actual",
@@ -23,6 +24,7 @@ full <- list(
 noAct <- list(
   name = "noAct",
   n_params = 4,
+  n_BIC = 4,
   probdist = "posterior",
   base = "cesm",
   Actual = NULL,
@@ -39,6 +41,7 @@ noAct <- list(
 noSelect <- list(
   name = "noSelect",
   n_params = 4,
+  n_BIC = 3,
   probdist = "posterior",
   base = "noSelect",
   Actual = "Actual",
@@ -55,6 +58,7 @@ noSelect <- list(
 noActnoSelect <- list(
   name = "noActnoSelect",
   n_params = 4,
+  n_BIC = 3,
   probdist = "posterior",
   base = "noSelect",
   Actual = NULL,
@@ -71,6 +75,7 @@ noActnoSelect <- list(
 noKind <- list(
   name = "noKind",
   n_params = 3,
+  n_BIC = 3,
   probdist = "posterior",
   base = "cesm",
   Actual = "Actual",
@@ -87,6 +92,7 @@ noKind <- list(
 noActnoKind <- list(
   name = "noActnoKind",
   n_params = 3,
+  n_BIC = 3,
   probdist = "posterior",
   base = "cesm",
   Actual = NULL,
@@ -103,6 +109,7 @@ noActnoKind <- list(
 noInfnoKind <- list(
   name = "noInfnoKind",
   n_params = 3,
+  n_BIC = 3,
   probdist = "PrUn",
   base = "cesm",
   Actual = "Actual",
@@ -119,6 +126,7 @@ noInfnoKind <- list(
 noKindnoSelect <- list(
   name = "noKindnoSelect",
   n_params = 3,
+  n_BIC = 2,
   probdist = "posterior",
   base = "noSelect",
   Actual = "Actual",
@@ -135,6 +143,7 @@ noKindnoSelect <- list(
 noActnoInfnoKind <- list(
   name = "noActnoInfnoKind",
   n_params = 3,
+  n_BIC = 3,
   probdist = "PrUn",
   base = "cesm",
   Actual = NULL,
@@ -151,6 +160,7 @@ noActnoInfnoKind <- list(
 noActnoKindnoSelect <- list(
   name = "noActnoKindnoSelect",
   n_params = 3,
+  n_BIC = 2,
   probdist = "posterior",
   base = "noSelect",
   Actual = NULL,
@@ -167,6 +177,7 @@ noActnoKindnoSelect <- list(
 noInfnoKindnoSelect <- list(
   name = "noInfnoKindnoSelect",
   n_params = 3,
+  n_BIC = 2,
   probdist = "PrUn",
   base = "noSelect",
   Actual = "Actual",
@@ -183,6 +194,7 @@ noInfnoKindnoSelect <- list(
 noActnoInfnoKindnoSelect <- list(
   name = "noActnoInfnoKindnoSelect",
   n_params = 3,
+  n_BIC = 2,
   probdist = "PrUn",
   base = "noSelect",
   Actual = NULL,
